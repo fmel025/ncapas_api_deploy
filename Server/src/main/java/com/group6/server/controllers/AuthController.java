@@ -68,6 +68,7 @@ public class AuthController {
 
         response.put("Message", "User is on");
         response.put("data", user);
+        response.put("roles", user.getAuthorizations());
 
         return new ResponseEntity<>(
                 response,

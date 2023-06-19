@@ -17,9 +17,9 @@ import java.util.UUID;
 public class Authorization {
 
     @Id
-    @Column(name = "code")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID code;
+    @Column(name = "code", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
 
     @Column(name = "name")
     private String name;
