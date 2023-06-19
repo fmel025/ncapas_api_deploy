@@ -52,12 +52,18 @@ public class AuthController {
         User user = authService.findByUsernameOrEmail(data.getEmail());
 
         if (user == null) {
-            user = authService.register(data);
-            return new ResponseEntity<>(user,
-                    HttpStatus.CREATED);
+            try {
+                user = authService.register(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>(
+                        new ErrorDTO("Internal server error"),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
         }
 
-        if (!user.getActive()){
+        if (!user.getActive()) {
             return new ResponseEntity<>(
                     new ErrorDTO("Your account has been blocked due to suspicious activity"),
                     HttpStatus.FORBIDDEN
