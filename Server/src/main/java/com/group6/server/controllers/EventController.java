@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 // This is the public controller, the one for the admin and event mod will be another one
 @RestController
-@RequestMapping(Constants.API_BASE_URL + "/event")
+@RequestMapping(Constants.API_PUBLIC_URL + "/event")
 public class EventController {
 
     @Autowired

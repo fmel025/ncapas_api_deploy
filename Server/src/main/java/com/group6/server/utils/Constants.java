@@ -8,7 +8,7 @@ public class Constants {
     public static final String API_ADMIN_URL = API_BASE_URL + "/private";
 
     // Available for everyone
-    public static final String API_USER_URL = API_BASE_URL + "/public";
+    public static final String API_PUBLIC_URL = API_BASE_URL + "/public";
 
     private Constants(){}
 }
