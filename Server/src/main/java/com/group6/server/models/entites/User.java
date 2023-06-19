@@ -7,11 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-// @ToString(exclude = "")
+@ToString(exclude = {"authorizations"})
 @Entity
 @Table(name = "user", schema = "public")
 public class User {
@@ -38,6 +39,15 @@ public class User {
 
     @Column(name = "is_password_set")
     private Boolean passwordSet;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_authorizations",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authorization_id")
+    )
+    private List<Authorization> authorizations;
 
     public User(String fullName, String email) {
         this.fullName = fullName;
