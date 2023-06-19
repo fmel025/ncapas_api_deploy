@@ -14,6 +14,6 @@ public class SignInGoogleDTO {
     @Email(message = "The email sent was invalid")
     private String email ; //  email
 
-    @NotEmpty(message = "Username is required")
-    private String username;
+    @NotEmpty(message = "Fullname is required")
+    private String fullname;
 }
