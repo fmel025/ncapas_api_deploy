@@ -10,7 +10,7 @@ public interface AuthService {
     User findByUsernameOrEmail(String identifier); // identifier is username or email
     User register(SignInGoogleDTO registerDTO) throws Exception;
     String generateToken(User user);
-
     User findUserAuthenticated();
     List<String> getUserAuthorities(User user);
+    Boolean comparePasswords(String toCompare, String current);
 }

@@ -35,8 +35,51 @@ public class AuthController {
                     )
             );
         }
-        return new ResponseEntity<Object>(new MessageDTO("Controller working successfully"),
-                HttpStatus.OK);
+
+        User user = authService.findByUsernameOrEmail(data.getIdentifier());
+
+        if(user == null){
+            return new ResponseEntity<>(
+                    new ErrorDTO("Invalid email or password"),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        if (!user.getPasswordSet()){
+            return new ResponseEntity<>(
+                    new ErrorDTO("The user has not a password set yet"),
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
+        Boolean isPasswordValid = authService.comparePasswords(data.getPassword(), user.getPassword());
+
+        if (!isPasswordValid){
+            return new ResponseEntity<>(
+                    new ErrorDTO("Invalid email or password"),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+
+        if(!user.getActive()){
+            return new ResponseEntity<>(
+                    new ErrorDTO("Your account has been blocked due to suspicious activity"),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+
+        // TODO: Validate the roles, if is a client and the system is shutdown return a Forbidden
+
+        String token = authService.generateToken(user);
+
+        TokenDTO tokenDTO = new TokenDTO(token, user.getPasswordSet());
+        List<String> authorities = authService.getUserAuthorities(user);
+        tokenDTO.setAuthorities(authorities);
+
+        return new ResponseEntity<>(
+                tokenDTO,
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/google")
@@ -64,10 +107,12 @@ public class AuthController {
             }
         }
 
+        // TODO: Validate the roles, if is a client and the system is shutdown return a Forbidden
+
         if (!user.getActive()) {
             return new ResponseEntity<>(
                     new ErrorDTO("Your account has been blocked due to suspicious activity"),
-                    HttpStatus.FORBIDDEN
+                    HttpStatus.UNAUTHORIZED
             );
         }
 

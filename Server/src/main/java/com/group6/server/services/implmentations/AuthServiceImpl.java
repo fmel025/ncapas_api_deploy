@@ -10,6 +10,7 @@ import com.group6.server.services.AuthService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     JWTTools jwtTools;
+
+    @Autowired
+    public PasswordEncoder passwordEncoder;
 
     @Override
     public User findByUsernameOrEmail(String identifier) {
@@ -62,5 +66,10 @@ public class AuthServiceImpl implements AuthService {
         return user.getAuthorizations().stream().map(
                 Authorization::getName
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean comparePasswords(String toCompare, String current) {
+        return passwordEncoder.matches(toCompare, current);
     }
 }
