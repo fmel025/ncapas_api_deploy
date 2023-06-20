@@ -1,8 +1,10 @@
 package com.group6.server.controllers;
 
 import com.group6.server.models.dtos.*;
+import com.group6.server.models.entites.Authorization;
 import com.group6.server.models.entites.User;
 import com.group6.server.services.AuthService;
+import com.group6.server.services.AuthorizationService;
 import com.group6.server.utils.ErrorHandler;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class AuthController {
     @Autowired
     private ErrorHandler errorHandler;
 
+    @Autowired
+    private AuthorizationService authorizationService;
+
     @PostMapping("/login")
     public ResponseEntity<?> getLogin(@Valid @RequestBody SignInDTO data, BindingResult validations) {
 
@@ -38,14 +43,14 @@ public class AuthController {
 
         User user = authService.findByUsernameOrEmail(data.getIdentifier());
 
-        if(user == null){
+        if (user == null) {
             return new ResponseEntity<>(
                     new ErrorDTO("Invalid email or password"),
                     HttpStatus.NOT_FOUND
             );
         }
 
-        if (!user.getPasswordSet()){
+        if (!user.getPasswordSet()) {
             return new ResponseEntity<>(
                     new ErrorDTO("The user has not a password set yet"),
                     HttpStatus.FORBIDDEN
@@ -54,14 +59,14 @@ public class AuthController {
 
         Boolean isPasswordValid = authService.comparePasswords(data.getPassword(), user.getPassword());
 
-        if (!isPasswordValid){
+        if (!isPasswordValid) {
             return new ResponseEntity<>(
                     new ErrorDTO("Invalid email or password"),
                     HttpStatus.UNAUTHORIZED
             );
         }
 
-        if(!user.getActive()){
+        if (!user.getActive()) {
             return new ResponseEntity<>(
                     new ErrorDTO("Your account has been blocked due to suspicious activity"),
                     HttpStatus.UNAUTHORIZED
@@ -97,7 +102,14 @@ public class AuthController {
 
         if (user == null) {
             try {
-                user = authService.register(data);
+                Authorization authorization = authorizationService.findByName("CLIENT");
+                if (authorization == null) {
+                    return new ResponseEntity<>(
+                            new ErrorDTO("The client authorization does not exists"),
+                            HttpStatus.NOT_FOUND
+                    );
+                }
+                user = authService.register(data, authorization);
             } catch (Exception e) {
                 e.printStackTrace();
                 return new ResponseEntity<>(

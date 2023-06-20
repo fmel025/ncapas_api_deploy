@@ -36,11 +36,13 @@ public class AuthServiceImpl implements AuthService {
     // Here you should add the authority/permission
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public User register(SignInGoogleDTO registerDTO) throws Exception {
+    public User register(SignInGoogleDTO registerDTO, Authorization authorization) throws Exception {
         User user = new User(
                 registerDTO.getFullname(),
                 registerDTO.getEmail()
         );
+
+        user.getAuthorizations().add(authorization);
 
         repository.save(user);
 
