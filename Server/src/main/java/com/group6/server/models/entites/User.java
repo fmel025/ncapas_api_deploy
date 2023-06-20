@@ -46,13 +46,13 @@ public class User implements UserDetails {
     private Boolean passwordSet;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_authorizations",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "authorization_id")
     )
-    private List<Authorization> authorizations;
+    private List<Authorization> authorizations = new ArrayList<>();;
 
     public User(String fullName, String email) {
         this.fullName = fullName;

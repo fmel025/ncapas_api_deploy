@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.group6.server.utils.Constants;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping(Constants.API_BASE_URL + "/auth")
@@ -70,14 +71,14 @@ public class AuthController {
             );
         }
 
-        HashMap<String, Object> response = new HashMap<>();
+        String token = authService.generateToken(user);
 
-        response.put("Message", "User is on");
-        response.put("data", user);
-        response.put("roles", user.getAuthorizations());
+        TokenDTO tokenDTO = new TokenDTO(token, user.getPasswordSet());
+        List<String> authorities = authService.getUserAuthorities(user);
+        tokenDTO.setAuthorities(authorities);
 
         return new ResponseEntity<>(
-                response,
+                tokenDTO,
                 HttpStatus.OK
         );
     }
