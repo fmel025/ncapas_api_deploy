@@ -33,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
         return repository.findByEmail(identifier);
     }
 
+    // Here you should add the authority/permission
     @Override
     @Transactional(rollbackOn = Exception.class)
     public User register(SignInGoogleDTO registerDTO) throws Exception {
