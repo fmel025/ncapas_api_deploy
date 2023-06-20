@@ -1,9 +1,10 @@
 package com.group6.server.controllers;
 
-import com.group6.server.models.dtos.ErrorsDTO;
-import com.group6.server.models.dtos.SignInDTO;
-import com.group6.server.models.dtos.SignInGoogleDTO;
+import com.group6.server.models.dtos.*;
+import com.group6.server.models.entites.Authorization;
+import com.group6.server.models.entites.User;
 import com.group6.server.services.AuthService;
+import com.group6.server.services.AuthorizationService;
 import com.group6.server.utils.ErrorHandler;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,44 +14,129 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.group6.server.utils.Constants;
 
-import com.group6.server.models.dtos.MessageDTO;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping(Constants.API_BASE_URL + "/auth")
 public class AuthController {
 
-	@Autowired
-	private AuthService userService;
+    @Autowired
+    private AuthService authService;
 
-	@Autowired
-	private ErrorHandler errorHandler;
+    @Autowired
+    private ErrorHandler errorHandler;
 
-	@PostMapping("/login")
-	public ResponseEntity<?> getLogin(@Valid @RequestBody SignInDTO data, BindingResult validations){
+    @Autowired
+    private AuthorizationService authorizationService;
 
-		if(validations.hasErrors()){
-			return ResponseEntity.badRequest().body(
-					new ErrorsDTO(
-							errorHandler.mapErrors(validations.getFieldErrors())
-					)
-			);
-		}
-		return new ResponseEntity<Object>( new MessageDTO("Controller working successfully"), 
-				HttpStatus.OK);
-	}
+    @PostMapping("/login")
+    public ResponseEntity<?> getLogin(@Valid @RequestBody SignInDTO data, BindingResult validations) {
 
-	@PostMapping("/google")
-	public ResponseEntity<?> getGoogleLogin(@Valid @RequestBody SignInGoogleDTO data, BindingResult validations) {
+        if (validations.hasErrors()) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorsDTO(
+                            errorHandler.mapErrors(validations.getFieldErrors())
+                    )
+            );
+        }
 
-		if(validations.hasErrors()){
-			return ResponseEntity.badRequest().body(
-					new ErrorsDTO(
-							errorHandler.mapErrors(validations.getFieldErrors())
-					)
-			);
-		}
+        User user = authService.findByUsernameOrEmail(data.getIdentifier());
 
-		return new ResponseEntity<Object>( new MessageDTO("Controller working successfully"),
-				HttpStatus.OK);
-	}
+        if (user == null) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("Invalid email or password"),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        if (!user.getPasswordSet()) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("The user has not a password set yet"),
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
+        Boolean isPasswordValid = authService.comparePasswords(data.getPassword(), user.getPassword());
+
+        if (!isPasswordValid) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("Invalid email or password"),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+
+        if (!user.getActive()) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("Your account has been blocked due to suspicious activity"),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+
+        // TODO: Validate the roles, if is a client and the system is shutdown return a Forbidden
+
+        String token = authService.generateToken(user);
+
+        TokenDTO tokenDTO = new TokenDTO(token, user.getPasswordSet());
+        List<String> authorities = authService.getUserAuthorities(user);
+        tokenDTO.setAuthorities(authorities);
+
+        return new ResponseEntity<>(
+                tokenDTO,
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> getGoogleLogin(@Valid @RequestBody SignInGoogleDTO data, BindingResult validations) {
+
+        if (validations.hasErrors()) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorsDTO(
+                            errorHandler.mapErrors(validations.getFieldErrors())
+                    )
+            );
+        }
+
+        User user = authService.findByUsernameOrEmail(data.getEmail());
+
+        if (user == null) {
+            try {
+                Authorization authorization = authorizationService.findByName("CLIENT");
+                if (authorization == null) {
+                    return new ResponseEntity<>(
+                            new ErrorDTO("The client authorization does not exists"),
+                            HttpStatus.NOT_FOUND
+                    );
+                }
+                user = authService.register(data, authorization);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>(
+                        new ErrorDTO("Internal server error"),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                );
+            }
+        }
+
+        // TODO: Validate the roles, if is a client and the system is shutdown return a Forbidden
+
+        if (!user.getActive()) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("Your account has been blocked due to suspicious activity"),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+
+        String token = authService.generateToken(user);
+
+        TokenDTO tokenDTO = new TokenDTO(token, user.getPasswordSet());
+        List<String> authorities = authService.getUserAuthorities(user);
+        tokenDTO.setAuthorities(authorities);
+
+        return new ResponseEntity<>(
+                tokenDTO,
+                HttpStatus.OK
+        );
+    }
 }

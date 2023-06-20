@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Constants.API_ADMIN_URL + "/user")
-public class UserController {
+public class UserPrivateController {
     @GetMapping("/all")
     public ResponseEntity<?> findAllUsers(){
         return ResponseEntity.ok().build();
