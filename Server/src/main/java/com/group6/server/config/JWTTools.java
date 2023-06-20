@@ -24,7 +24,7 @@ public class JWTTools {
 
         return Jwts.builder()
                 .addClaims(claims)
-                .setSubject(String.valueOf(user.getCode()))
+                .setSubject(user.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + exp))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
