@@ -11,4 +11,5 @@ public class Constants {
     public static final String API_PUBLIC_URL = API_BASE_URL + "/public";
 
     private Constants(){}
+
 }
