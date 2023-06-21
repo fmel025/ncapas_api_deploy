@@ -19,10 +19,11 @@ public class UserController {
 
     @Autowired
     private ErrorHandler errorHandler;
-    @PatchMapping("/change-password")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO data, BindingResult validations){
 
-        if(validations.hasErrors()) {
+    @PatchMapping("/change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDTO data, BindingResult validations) {
+
+        if (validations.hasErrors()) {
             return ResponseEntity.badRequest()
                     .body(
                             new ErrorsDTO(
@@ -37,10 +38,10 @@ public class UserController {
     }
 
     // This route may be needed in the future
-    @PatchMapping("/change-username")
-    public ResponseEntity<?> changeUsername(@Valid @RequestBody ChangeUsernameDTO data, BindingResult validations){
+    @PatchMapping("/set-password")
+    public ResponseEntity<?> changeUsername(@Valid @RequestBody ChangeUsernameDTO data, BindingResult validations) {
 
-        if(validations.hasErrors()) {
+        if (validations.hasErrors()) {
             return ResponseEntity.badRequest()
                     .body(
                             new ErrorsDTO(
@@ -56,13 +57,13 @@ public class UserController {
 
     // This route is to get a user code to transfer a ticket
     @GetMapping("/code/{id}")
-    public ResponseEntity<?> getUserCode(@PathVariable(name = "id") String id){
+    public ResponseEntity<?> getUserCode(@PathVariable(name = "id") String id) {
         return ResponseEntity.ok().build();
     }
 
     // This could be a /me route too
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserData(@PathVariable(name = "id") String id){
+    public ResponseEntity<?> getUserData(@PathVariable(name = "id") String id) {
         return ResponseEntity.ok().build();
     }
 }
