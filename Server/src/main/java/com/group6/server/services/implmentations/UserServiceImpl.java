@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
     public User setPassword(String password, User user) throws Exception {
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
+        user.setPasswordSet(true);
         repository.save(user);
         return user;
     }
