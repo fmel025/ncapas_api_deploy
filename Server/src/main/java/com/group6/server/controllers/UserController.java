@@ -41,9 +41,37 @@ public class UserController {
                     );
         }
 
-        return ResponseEntity.ok().body(
-                new MessageDTO("The password was updated successfully")
-        );
+        User user = authService.findUserAuthenticated();
+
+        boolean doesPasswordsMatch = userService.comparePassword(data.getCurrentPassword(), user.getPassword());
+
+        if (!doesPasswordsMatch) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("The password sent does not match your previous one"),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        if (data.getCurrentPassword().equals(data.getNewPassword())) {
+            return new ResponseEntity<>(
+                    new ErrorDTO("The new password cannot be the current one"),
+                    HttpStatus.CONFLICT
+            );
+        }
+
+        try {
+            userService.setPassword(data.getNewPassword(), user);
+            return ResponseEntity.ok(
+                    new MessageDTO("The password has changed successfully")
+            );
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity<>(
+                    new ErrorDTO("Internal Server Error"),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     // This route may be needed in the future
