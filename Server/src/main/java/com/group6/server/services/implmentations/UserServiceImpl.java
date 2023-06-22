@@ -1,5 +1,6 @@
 package com.group6.server.services.implmentations;
 
+import com.group6.server.models.dtos.ProfileResponseDTO;
 import com.group6.server.models.entites.User;
 import com.group6.server.repositories.UserRepository;
 import com.group6.server.services.UserService;
@@ -55,5 +56,14 @@ public class UserServiceImpl implements UserService {
         user.setPasswordSet(true);
         repository.save(user);
         return user;
+    }
+
+    @Override
+    public ProfileResponseDTO getUserProfile(User user) {
+        return new ProfileResponseDTO(
+                user.getCode(),
+                user.getFullName(),
+                user.getEmail()
+        );
     }
 }

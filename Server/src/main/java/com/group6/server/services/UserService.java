@@ -1,5 +1,6 @@
 package com.group6.server.services;
 
+import com.group6.server.models.dtos.ProfileResponseDTO;
 import com.group6.server.models.dtos.SignInGoogleDTO;
 import com.group6.server.models.dtos.SignInDTO;
 import com.group6.server.models.entites.User;
@@ -23,4 +24,6 @@ public interface UserService {
 
     //change username method
     User setPassword(String password, User user) throws Exception;
+
+    ProfileResponseDTO getUserProfile(User user);
 }

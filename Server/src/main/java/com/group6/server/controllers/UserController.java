@@ -118,14 +118,20 @@ public class UserController {
     }
 
     // This route is to get a user code to transfer a ticket
-    @GetMapping("/code/{id}")
+    // TODO: Make this route to generate a transfer code
+    @GetMapping("/code")
     public ResponseEntity<?> getUserCode(@PathVariable(name = "id") String id) {
         return ResponseEntity.ok().build();
     }
 
-    // This could be a /me route too
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserData(@PathVariable(name = "id") String id) {
-        return ResponseEntity.ok().build();
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile() {
+        User user = authService.findUserAuthenticated();
+        ProfileResponseDTO profile = userService.getUserProfile(user);
+        return new ResponseEntity<>(
+                profile,
+                HttpStatus.OK
+        );
     }
+
 }
