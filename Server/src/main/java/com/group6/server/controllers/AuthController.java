@@ -57,7 +57,7 @@ public class AuthController {
             );
         }
 
-        Boolean isPasswordValid = authService.comparePasswords(data.getPassword(), user.getPassword());
+        boolean isPasswordValid = authService.comparePassword(data.getPassword(), user.getPassword());
 
         if (!isPasswordValid) {
             return new ResponseEntity<>(

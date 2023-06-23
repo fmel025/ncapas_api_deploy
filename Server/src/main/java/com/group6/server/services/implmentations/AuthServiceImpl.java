@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Boolean comparePasswords(String toCompare, String current) {
-        return passwordEncoder.matches(toCompare, current);
+    public boolean comparePassword(String password, String hashedPassword) {
+        return passwordEncoder.matches(password, hashedPassword);
     }
 }

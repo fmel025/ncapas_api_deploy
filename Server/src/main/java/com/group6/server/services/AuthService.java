@@ -13,5 +13,5 @@ public interface AuthService {
     String generateToken(User user);
     User findUserAuthenticated();
     List<String> getUserAuthorities(User user);
-    Boolean comparePasswords(String toCompare, String current);
+    boolean comparePassword(String password, String hashedPassword);
 }
