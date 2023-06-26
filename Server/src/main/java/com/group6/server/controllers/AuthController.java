@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(Constants.API_BASE_URL + "/auth")
 public class AuthController {
 
