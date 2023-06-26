@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(Constants.API_BASE_URL + "/user")
 public class UserController {
 
@@ -99,10 +100,10 @@ public class UserController {
         try {
             userService.setPassword(data.getPassword(), user);
 
-            HashMap<String, Object> response = new HashMap<>();
-
-            response.put("message", "The password has been set successfully");
-            response.put("isPasswordSet", true);
+            SetPasswordResponseDTO response = new SetPasswordResponseDTO(
+                    "The password has been set successfully",
+                    true
+            );
 
             return ResponseEntity.ok(response);
 
