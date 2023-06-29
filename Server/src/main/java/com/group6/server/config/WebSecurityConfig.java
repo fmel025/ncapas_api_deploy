@@ -57,6 +57,8 @@ public class WebSecurityConfig {
         //Http login and cors disabled
         http.httpBasic(withDefaults()).csrf(csrf -> csrf.disable());
 
+        http.cors(withDefaults());
+
         //Route filter
         http.authorizeHttpRequests(auth ->
                 auth
