@@ -1,7 +1,7 @@
 package com.group6.server.controllers.admin;
 
 import com.group6.server.models.dtos.ErrorsDTO;
-import com.group6.server.models.dtos.EventDTO;
+import com.group6.server.models.dtos.Event.EventDTO;
 import com.group6.server.models.dtos.admin.AddSponsorDTO;
 import com.group6.server.models.dtos.admin.CreateTierDTO;
 import com.group6.server.models.dtos.admin.UpdateEventDTO;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(Constants.API_ADMIN_URL + "/event")

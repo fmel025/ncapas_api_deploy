@@ -1,4 +1,4 @@
-package com.group6.server.models.dtos;
+package com.group6.server.models.dtos.Event;
 
 import com.group6.server.models.dtos.Tier.TierCreateDTO;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,16 +29,4 @@ public class EventDTO {
     @NotEmpty(message = "The url image is required")
     @URL(message = "The url sent is invalid")
     private String imageUrl;
-
-    @NotEmpty(message = "The event categories must be sent")
-    private List<String> categories;
-
-    @NotEmpty(message = "The organizers are required")
-    private List<String> organizers;
-
-    @NotEmpty(message = "The sponsors are required")
-    private List<String> sponsors;
-
-    @NotEmpty(message = "It has to be at least one tier")
-    private List<TierCreateDTO> tiers;
 }
