@@ -133,6 +133,7 @@ public class AuthController {
 
         TokenDTO tokenDTO = new TokenDTO(token, user.getPasswordSet());
         List<String> authorities = authService.getUserAuthorities(user);
+
         tokenDTO.setAuthorities(authorities);
 
         return new ResponseEntity<>(

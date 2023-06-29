@@ -66,7 +66,7 @@ public class User implements UserDetails {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         this.authorizations.forEach(
-                authority ->authorities.add(new SimpleGrantedAuthority(authority.getName()))
+                authority ->authorities.add(new SimpleGrantedAuthority(authority.getPermission()))
         );
 
         return authorities;
