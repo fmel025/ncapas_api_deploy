@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public List<String> getUserAuthorities(User user) {
         return user.getAuthorizations().stream().map(
-                Authorization::getName
+                Authorization::getPermission
         ).collect(Collectors.toList());
     }
 

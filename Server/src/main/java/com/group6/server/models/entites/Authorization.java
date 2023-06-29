@@ -21,8 +21,8 @@ public class Authorization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer code;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "permission")
+    private String permission;
 
     @ManyToMany(mappedBy = "authorizations")
     @JsonIgnore

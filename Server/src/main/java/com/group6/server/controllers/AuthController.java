@@ -103,7 +103,7 @@ public class AuthController {
 
         if (user == null) {
             try {
-                Authorization authorization = authorizationService.findByName("CLIENT");
+                Authorization authorization = authorizationService.findByPermission("CLIENT");
                 if (authorization == null) {
                     return new ResponseEntity<>(
                             new ErrorDTO("The client authorization does not exists"),
