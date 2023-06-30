@@ -24,15 +24,19 @@ public class Event {
     @Column(name = "duration")
     private String duration;
 
+    @Column(name = "location")
+    private String location;
+
     @Column(name = "datetime")
     private LocalDateTime dateTime;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    public Event(String title, String duration, LocalDateTime dateTime, String imageUrl) {
+    public Event(String title, String duration, String location, LocalDateTime dateTime, String imageUrl) {
         this.title = title;
         this.duration = duration;
+        this.location = location;
         this.dateTime = dateTime;
         this.imageUrl = imageUrl;
     }

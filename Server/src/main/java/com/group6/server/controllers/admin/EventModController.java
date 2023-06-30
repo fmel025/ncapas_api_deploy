@@ -6,6 +6,8 @@ import com.group6.server.models.dtos.Event.EventMultivaluedDTO;
 import com.group6.server.models.dtos.admin.AddSponsorDTO;
 import com.group6.server.models.dtos.admin.CreateTierDTO;
 import com.group6.server.models.dtos.admin.UpdateEventDTO;
+import com.group6.server.models.entites.Event;
+import com.group6.server.services.EventService;
 import com.group6.server.utils.Constants;
 import com.group6.server.utils.ErrorHandler;
 import jakarta.validation.Valid;
@@ -21,7 +23,10 @@ import org.springframework.web.bind.annotation.*;
 public class EventModController {
 
     @Autowired
-    ErrorHandler errorHandler;
+    private ErrorHandler errorHandler;
+
+    @Autowired
+    private EventService eventService;
 
     @PostMapping("/")
     public ResponseEntity<?> createEvent(
@@ -35,9 +40,9 @@ public class EventModController {
             );
         }
 
-        System.out.println(dto);
+        Event event = eventService.createEvent(dto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(event);
     }
 
     // This route may not be needed
