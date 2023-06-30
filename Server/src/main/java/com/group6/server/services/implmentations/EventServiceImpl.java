@@ -22,7 +22,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Event createEvent(EventDTO eventDTO) throws  Exception {
+    public Event createEvent(EventDTO eventDTO) throws Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(eventDTO.getDateAndTime(), formatter);
         Event event = new Event(

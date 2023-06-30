@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +39,10 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Sponsor> sponsors;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Organizer> organizers;
 
     public Event(String title, String duration, String location, LocalDateTime dateTime, String imageUrl) {
         this.title = title;
