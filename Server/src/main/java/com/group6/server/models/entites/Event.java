@@ -49,6 +49,10 @@ public class Event {
     @JsonIgnore
     private List<Category> categories;
 
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Tier> tiers;
+
     public Event(String title, String duration, String location, LocalDateTime dateTime, String imageUrl) {
         this.title = title;
         this.duration = duration;
