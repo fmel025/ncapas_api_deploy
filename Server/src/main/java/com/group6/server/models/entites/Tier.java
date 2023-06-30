@@ -26,6 +26,9 @@ public class Tier {
     @Column(name = "capacity")
     private Integer capacity;
 
+    @Column(name = "current_capacity")
+    private Integer currentCapacity;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
@@ -35,5 +38,6 @@ public class Tier {
         this.price = price;
         this.event = event;
         this.capacity = capacity;
+        this.currentCapacity = capacity;
     }
 }
