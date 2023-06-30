@@ -6,6 +6,7 @@ import com.group6.server.models.entites.Event;
 import com.group6.server.models.entites.User;
 import com.group6.server.repositories.EventRepository;
 import com.group6.server.services.EventService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ public class EventServiceImpl implements EventService {
     private EventRepository repository;
 
     @Override
-    public Event createEvent(EventDTO eventDTO) {
+    @Transactional(rollbackOn = Exception.class)
+    public Event createEvent(EventDTO eventDTO) throws  Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(eventDTO.getDateAndTime(), formatter);
         Event event = new Event(
@@ -47,8 +49,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event findEventById(String id) {
-        return null;
+    public Event findEventById(Integer id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override

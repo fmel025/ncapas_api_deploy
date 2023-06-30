@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface EventService {
     //create event
-    Event createEvent(EventDTO eventDTO);
+    Event createEvent(EventDTO eventDTO) throws Exception;
 
     //update event
     Event updateEvent(UpdateEventDTO eventDTO); // should be the same method as createEvent
@@ -18,7 +18,7 @@ public interface EventService {
     List<Event> findAllEvents();
 
     //find event by id
-    Event findEventById(String id);
+    Event findEventById(Integer id);
 
     //find  event by title
     List<Event> findEventByTitle(String title);

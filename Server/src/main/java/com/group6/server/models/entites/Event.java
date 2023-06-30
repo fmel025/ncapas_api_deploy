@@ -1,10 +1,12 @@
 package com.group6.server.models.entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -32,6 +34,10 @@ public class Event {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Sponsor> sponsors;
 
     public Event(String title, String duration, String location, LocalDateTime dateTime, String imageUrl) {
         this.title = title;

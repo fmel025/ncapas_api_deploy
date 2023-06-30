@@ -2,20 +2,24 @@ package com.group6.server.controllers.admin;
 
 import com.group6.server.models.dtos.ErrorsDTO;
 import com.group6.server.models.dtos.Event.EventDTO;
-import com.group6.server.models.dtos.Event.EventMultivaluedDTO;
-import com.group6.server.models.dtos.admin.AddSponsorDTO;
-import com.group6.server.models.dtos.admin.CreateTierDTO;
+import com.group6.server.models.dtos.Event.EventDTOResponse;
+import com.group6.server.models.dtos.Response.ErrorResponse;
+import com.group6.server.models.dtos.Response.Response;
 import com.group6.server.models.dtos.admin.UpdateEventDTO;
 import com.group6.server.models.entites.Event;
 import com.group6.server.services.EventService;
+import com.group6.server.services.SponsorService;
 import com.group6.server.utils.Constants;
 import com.group6.server.utils.ErrorHandler;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @CrossOrigin("*")
@@ -28,53 +32,45 @@ public class EventModController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping("/")
+    @Autowired
+    private SponsorService sponsorService;
+
+    @PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createEvent(
-            @Valid @RequestBody EventMultivaluedDTO dto,
+            @Valid @RequestBody EventDTO dto,
             BindingResult validations
-    ) {
+    )  {
         if (validations.hasErrors()) {
             return new ResponseEntity<>(
-                    new ErrorsDTO(errorHandler.mapErrors(validations.getFieldErrors())),
+                    ErrorResponse.builder()
+                            .status(HttpStatus.BAD_REQUEST.name())
+                            .statusCode(HttpStatus.BAD_REQUEST.value())
+                            .reason("Invalid body was sent")
+                            .errors(errorHandler.mapErrors(validations.getFieldErrors()))
+                            .success(false)
+                            .build(),
                     HttpStatus.BAD_REQUEST
             );
         }
 
-        Event event = eventService.createEvent(dto);
+        try {
+            Event event = eventService.createEvent(dto);
 
-        return ResponseEntity.ok(event);
-    }
+            EventDTOResponse response = new EventDTOResponse(event.getCode());
 
-    // This route may not be needed
-    @PostMapping("/sponsor")
-    public ResponseEntity<?> addSponsorToEvent(
-            @Valid @RequestBody AddSponsorDTO dto,
-            BindingResult validations
-    ) {
-        if (validations.hasErrors()) {
             return new ResponseEntity<>(
-                    new ErrorsDTO(errorHandler.mapErrors(validations.getFieldErrors())),
-                    HttpStatus.BAD_REQUEST
+                    Response.builder()
+                            .status(CREATED.name())
+                            .statusCode(CREATED.value())
+                            .message("La creacion del evento fue exitosa!")
+                            .success(true)
+                            .data(response)
+                            .build(),
+                    CREATED
             );
+        } catch (Exception exception) {
+            return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok().build();
-    }
-
-    // This route may be needed to make it flexible
-    // Here I doubt if I have to create the tier here or outside
-    // By default I will make it here
-    @PostMapping("/tier")
-    public ResponseEntity<?> addTierToEvent(
-            @Valid @RequestBody CreateTierDTO dto,
-            BindingResult validations
-    ) {
-        if (validations.hasErrors()) {
-            return new ResponseEntity<>(
-                    new ErrorsDTO(errorHandler.mapErrors(validations.getFieldErrors())),
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-        return ResponseEntity.ok().build();
     }
 
     // To update the event data
