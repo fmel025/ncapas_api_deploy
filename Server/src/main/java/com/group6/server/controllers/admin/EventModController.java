@@ -2,6 +2,7 @@ package com.group6.server.controllers.admin;
 
 import com.group6.server.models.dtos.ErrorsDTO;
 import com.group6.server.models.dtos.Event.EventDTO;
+import com.group6.server.models.dtos.Event.EventMultivaluedDTO;
 import com.group6.server.models.dtos.admin.AddSponsorDTO;
 import com.group6.server.models.dtos.admin.CreateTierDTO;
 import com.group6.server.models.dtos.admin.UpdateEventDTO;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(Constants.API_ADMIN_URL + "/event")
 public class EventModController {
 
@@ -23,7 +25,7 @@ public class EventModController {
 
     @PostMapping("/")
     public ResponseEntity<?> createEvent(
-            @Valid @RequestBody EventDTO dto,
+            @Valid @RequestBody EventMultivaluedDTO dto,
             BindingResult validations
     ) {
         if (validations.hasErrors()) {
@@ -32,6 +34,9 @@ public class EventModController {
                     HttpStatus.BAD_REQUEST
             );
         }
+
+        System.out.println(dto);
+
         return ResponseEntity.ok().build();
     }
 

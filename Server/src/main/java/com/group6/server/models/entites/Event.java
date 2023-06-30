@@ -1,5 +1,6 @@
 package com.group6.server.models.entites;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,17 +9,31 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@Entity
+@Table(name = "event", schema = "public")
 public class Event {
 
-    private UUID id;
+    @Id
+    @Column(name = "code", unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
 
+    @Column(name = "title")
     private String title;
 
-    private String organizer;
+    @Column(name = "duration")
+    private String duration;
 
-    private LocalDateTime date;
+    @Column(name = "datetime")
+    private LocalDateTime dateTime;
 
-    private String location;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    private String url_image;
+    public Event(String title, String duration, LocalDateTime dateTime, String imageUrl) {
+        this.title = title;
+        this.duration = duration;
+        this.dateTime = dateTime;
+        this.imageUrl = imageUrl;
+    }
 }
