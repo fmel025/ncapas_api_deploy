@@ -23,13 +23,17 @@ public class Tier {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "capacity")
+    private Integer capacity;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
 
-    public Tier(String name, BigDecimal price, Event event) {
+    public Tier(String name, BigDecimal price, Integer capacity, Event event) {
         this.name = name;
         this.price = price;
         this.event = event;
+        this.capacity = capacity;
     }
 }
