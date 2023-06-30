@@ -75,6 +75,7 @@ public class EventPrivateController {
                             .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
                             .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .reason("Oops, the server is having issues, try later")
+                            .success(false)
                             .build()
             );
         }
