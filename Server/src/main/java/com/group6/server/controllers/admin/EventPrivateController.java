@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RestController
 @CrossOrigin("*")
 @RequestMapping(Constants.API_ADMIN_URL + "/event")
-public class EventModController {
+public class EventPrivateController {
 
     @Autowired
     private ErrorHandler errorHandler;
@@ -69,7 +69,14 @@ public class EventModController {
                     CREATED
             );
         } catch (Exception exception) {
-            return ResponseEntity.internalServerError().build();
+            exception.printStackTrace();
+            return ResponseEntity.internalServerError().body(
+                    ErrorResponse.builder()
+                            .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                            .reason("Oops, the server is having issues, try later")
+                            .build()
+            );
         }
     }
 
