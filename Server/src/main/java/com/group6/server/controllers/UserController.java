@@ -16,6 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin("*")
@@ -77,13 +80,22 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getAllPermissions(){
+    public ResponseEntity<?> getAllPermissions() {
+
+        User user = authService.findUserAuthenticated();
+        List<String> permissions = user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        Boolean isPasswordSet = user.getPasswordSet();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("permissions", permissions);
+        response.put("isPasswordSet", isPasswordSet);
+
         return ResponseEntity.ok(
-                authService.findUserAuthenticated()
-                        .getAuthorities()
-                        .stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .toList()
+                response
         );
     }
 
