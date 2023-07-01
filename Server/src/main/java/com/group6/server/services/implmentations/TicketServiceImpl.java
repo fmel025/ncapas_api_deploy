@@ -1,5 +1,6 @@
 package com.group6.server.services.implmentations;
 
+import com.group6.server.models.dtos.TicketDTO;
 import com.group6.server.models.entites.Purchase;
 import com.group6.server.models.entites.Ticket;
 import com.group6.server.models.entites.Tier;
@@ -17,8 +18,10 @@ public class TicketServiceImpl implements TicketService{
 
     @Autowired
     private TicketsRepository ticketRepository;
+
+
     @Override
-    public void create(Ticket ticket, Tier tier) {
+    public void create(Ticket ticket, TicketDTO ticketDTO) {
 
     }
 

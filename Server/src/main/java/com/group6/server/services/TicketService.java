@@ -1,5 +1,6 @@
 package com.group6.server.services;
 
+import com.group6.server.models.dtos.TicketDTO;
 import com.group6.server.models.entites.Purchase;
 import com.group6.server.models.entites.Ticket;
 import com.group6.server.models.entites.Tier;
@@ -8,7 +9,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface TicketService {
-   void create(Ticket ticket, Tier tier);
+   void create(Ticket ticket, TicketDTO ticketDTO);
 
    Ticket getById(String id);
 
