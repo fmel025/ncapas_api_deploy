@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@ToString(exclude = {"authorizations"})
+@ToString(exclude = {"authorizations","tickets"})
 @Entity
 @Table(name = "user", schema = "public")
 public class User implements UserDetails {
@@ -53,6 +53,10 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "authorization_id")
     )
     private List<Authorization> authorizations = new ArrayList<>();;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Ticket> tickets;
 
     public User(String fullName, String email) {
         this.fullName = fullName;

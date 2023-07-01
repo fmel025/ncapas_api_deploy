@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@ToString(exclude = {"sponsors","organizers","categories","tiers","tickets"})
 @Table(name = "event", schema = "public")
 public class Event {
 
@@ -56,6 +58,10 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Tier> tiers;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Ticket> tickets;
 
     public Event(String title, String duration, String location, LocalDateTime dateTime, String imageUrl) {
         this.title = title;
