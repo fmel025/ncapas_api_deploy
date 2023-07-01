@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     @Autowired
-    JWTTools jwtTools;
+    private JWTTools jwtTools;
 
     @Autowired
     public PasswordEncoder passwordEncoder;
@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public List<String> getUserAuthorities(User user) {
         return user.getAuthorizations().stream().map(
-                Authorization::getName
+                Authorization::getPermission
         ).collect(Collectors.toList());
     }
 

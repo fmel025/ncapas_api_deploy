@@ -46,14 +46,14 @@ public class AuthController {
 
         if (user == null) {
             return new ResponseEntity<>(
-                    new ErrorDTO("Invalid email or password"),
+                    new ErrorDTO("Invalid email or password", false),
                     HttpStatus.NOT_FOUND
             );
         }
 
         if (!user.getPasswordSet()) {
             return new ResponseEntity<>(
-                    new ErrorDTO("The user has not a password set yet"),
+                    new ErrorDTO("The user has not a password set yet", false),
                     HttpStatus.FORBIDDEN
             );
         }
@@ -62,14 +62,14 @@ public class AuthController {
 
         if (!isPasswordValid) {
             return new ResponseEntity<>(
-                    new ErrorDTO("Invalid email or password"),
+                    new ErrorDTO("Invalid email or password", false),
                     HttpStatus.UNAUTHORIZED
             );
         }
 
         if (!user.getActive()) {
             return new ResponseEntity<>(
-                    new ErrorDTO("Your account has been blocked due to suspicious activity"),
+                    new ErrorDTO("Your account has been blocked due to suspicious activity", false),
                     HttpStatus.UNAUTHORIZED
             );
         }
@@ -103,10 +103,10 @@ public class AuthController {
 
         if (user == null) {
             try {
-                Authorization authorization = authorizationService.findByName("CLIENT");
+                Authorization authorization = authorizationService.findByPermission("CLIENT");
                 if (authorization == null) {
                     return new ResponseEntity<>(
-                            new ErrorDTO("The client authorization does not exists"),
+                            new ErrorDTO("The client authorization does not exists", false),
                             HttpStatus.NOT_FOUND
                     );
                 }
@@ -114,7 +114,7 @@ public class AuthController {
             } catch (Exception e) {
                 e.printStackTrace();
                 return new ResponseEntity<>(
-                        new ErrorDTO("Internal server error"),
+                        new ErrorDTO("Internal server error", false),
                         HttpStatus.INTERNAL_SERVER_ERROR
                 );
             }
@@ -124,7 +124,7 @@ public class AuthController {
 
         if (!user.getActive()) {
             return new ResponseEntity<>(
-                    new ErrorDTO("Your account has been blocked due to suspicious activity"),
+                    new ErrorDTO("Your account has been blocked due to suspicious activity", false),
                     HttpStatus.UNAUTHORIZED
             );
         }
@@ -133,6 +133,7 @@ public class AuthController {
 
         TokenDTO tokenDTO = new TokenDTO(token, user.getPasswordSet());
         List<String> authorities = authService.getUserAuthorities(user);
+
         tokenDTO.setAuthorities(authorities);
 
         return new ResponseEntity<>(

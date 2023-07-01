@@ -42,7 +42,7 @@ public class PurchaseController {
     public ResponseEntity<?> findByUser(@PathVariable(name = "code") String identifier){
         if(identifier.isEmpty()){
             return ResponseEntity.badRequest().body(
-                    new ErrorDTO("The user is required for this request")
+                    new ErrorDTO("The user is required for this request", false)
             );
         }
 

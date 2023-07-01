@@ -18,8 +18,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public Authorization findByName(String name) {
-        return authorizationRepository.findByName(name);
+    public Authorization findByPermission(String permission) {
+        return authorizationRepository.findByPermission(permission);
     }
 
     // Idk why we created this

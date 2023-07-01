@@ -48,14 +48,14 @@ public class UserController {
 
         if (!doesPasswordsMatch) {
             return new ResponseEntity<>(
-                    new ErrorDTO("The password sent does not match your previous one"),
+                    new ErrorDTO("The password sent does not match your previous one", false),
                     HttpStatus.BAD_REQUEST
             );
         }
 
         if (data.getCurrentPassword().equals(data.getNewPassword())) {
             return new ResponseEntity<>(
-                    new ErrorDTO("The new password cannot be the current one"),
+                    new ErrorDTO("The new password cannot be the current one", false),
                     HttpStatus.CONFLICT
             );
         }
@@ -69,7 +69,7 @@ public class UserController {
         } catch (Exception exception) {
             exception.printStackTrace();
             return new ResponseEntity<>(
-                    new ErrorDTO("Internal Server Error"),
+                    new ErrorDTO("Internal Server Error", false),
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
@@ -92,7 +92,7 @@ public class UserController {
 
         if (user.getPasswordSet()) {
             return new ResponseEntity<>(
-                    new ErrorDTO("The user has already a current password"),
+                    new ErrorDTO("The user has already a current password", false),
                     HttpStatus.FORBIDDEN
             );
         }
@@ -112,7 +112,7 @@ public class UserController {
             e.printStackTrace();
 
             return new ResponseEntity<>(
-                    new ErrorDTO("Internal Server Error"),
+                    new ErrorDTO("Internal Server Error", false),
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }

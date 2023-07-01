@@ -1,6 +1,8 @@
-package com.group6.server.models.dtos;
+package com.group6.server.models.dtos.Event;
 
+import com.group6.server.models.dtos.Tier.TierCreateDTO;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,23 +15,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventDTO {
-    // TODO: You must create the fields required for this dto
     @NotEmpty(message = "The event must have a title")
     private String title;
-
-    @NotEmpty(message = "The organizer is required")
-    private String organizer;
 
     @NotEmpty(message = "The event location is required")
     private String location;
 
-    @NotEmpty(message = "The date and time must be sent")
-    private LocalDateTime date;
+    @NotNull(message = "The date and hour of the event must be sent")
+    private String dateAndTime;
+
+    @NotEmpty(message = "The duration must be sent")
+    private String duration;
 
     @NotEmpty(message = "The url image is required")
     @URL(message = "The url sent is invalid")
     private String imageUrl;
-
-    @NotEmpty(message = "The event categories must be sent")
-    private List<String> categories;
 }
