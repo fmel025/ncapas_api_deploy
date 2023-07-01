@@ -62,8 +62,6 @@ public class AdminController {
         if (validations.hasErrors()) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.BAD_REQUEST.name())
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
                             .reason("Invalid body was sent")
                             .errors(errorHandler.mapErrors(validations.getFieldErrors()))
                             .success(false)
@@ -77,8 +75,6 @@ public class AdminController {
         if (authorization == null) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.NOT_FOUND.name())
-                            .statusCode(HttpStatus.NOT_FOUND.value())
                             .reason("The authorization was not found")
                             .success(false)
                             .build(),
@@ -91,8 +87,6 @@ public class AdminController {
         if (user != null) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.CONFLICT.name())
-                            .statusCode(HttpStatus.CONFLICT.value())
                             .reason("The user already exists")
                             .success(false)
                             .build(),
@@ -105,8 +99,6 @@ public class AdminController {
             return new ResponseEntity<>(
                     Response.builder()
                             .success(true)
-                            .status(HttpStatus.CREATED.name())
-                            .statusCode(HttpStatus.CREATED.value())
                             .message("El trabajador ha sido registrado con exito!")
                             .build(),
                     HttpStatus.CREATED
@@ -116,8 +108,6 @@ public class AdminController {
             exception.printStackTrace();
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .reason("Oops, the server is not working")
                             .success(false)
                             .build(),

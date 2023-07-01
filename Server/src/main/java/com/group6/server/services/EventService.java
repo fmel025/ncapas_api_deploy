@@ -4,6 +4,7 @@ import com.group6.server.models.dtos.Event.EventDTO;
 import com.group6.server.models.dtos.admin.UpdateEventDTO;
 import com.group6.server.models.entites.Event;
 import com.group6.server.models.entites.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,6 +17,13 @@ public interface EventService {
 
     //find all events
     List<Event> findAllEvents();
+
+    Page<Event> findAll(int page, int size);
+    Page<Event> findAllActive(int page, int size);
+
+    Page<Event> findAllByTitle(int page, int size, String title);
+
+    Page<Event> findAllByTitleAndActive(int page, int size, String title);
 
     //find event by id
     Event findEventById(Integer id);

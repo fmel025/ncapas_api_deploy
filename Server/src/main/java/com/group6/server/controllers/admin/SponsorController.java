@@ -4,6 +4,7 @@ import com.group6.server.models.dtos.Response.ErrorResponse;
 import com.group6.server.models.dtos.Response.Response;
 import com.group6.server.models.dtos.Sponsor.SponsorsCreateDTO;
 import com.group6.server.models.entites.Event;
+import com.group6.server.models.entites.Sponsor;
 import com.group6.server.services.EventService;
 import com.group6.server.services.SponsorService;
 import com.group6.server.utils.Constants;
@@ -16,9 +17,11 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
-@RequestMapping(Constants.API_ADMIN_URL + "/sponsor")
+@RequestMapping(Constants.API_BASE_URL + "/sponsor")
 public class SponsorController {
 
     @Autowired
@@ -38,8 +41,6 @@ public class SponsorController {
         if (validations.hasErrors()) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.BAD_REQUEST.name())
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
                             .reason("Invalid body was sent")
                             .errors(errorHandler.mapErrors(validations.getFieldErrors()))
                             .success(false)
@@ -54,8 +55,6 @@ public class SponsorController {
             sponsorService.saveAll(data.getSponsors(), event);
             return new ResponseEntity<>(
                     Response.builder()
-                            .status(HttpStatus.CREATED.name())
-                            .statusCode(HttpStatus.CREATED.value())
                             .message("Los sponsors se han creado exitosamente")
                             .success(true)
                             .build(),
@@ -65,8 +64,6 @@ public class SponsorController {
             exception.printStackTrace();
             return ResponseEntity.internalServerError().body(
                     ErrorResponse.builder()
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .reason("Oops, the server is having issues, try later")
                             .success(false)
                             .build()
@@ -74,4 +71,29 @@ public class SponsorController {
         }
     }
 
+    @GetMapping("/event/{code}")
+    public ResponseEntity<?> findSponsorsByEvent(
+            @PathVariable(name = "code") Integer code
+    ) {
+        Event event = eventService.findEventById(code);
+
+        if (event == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder().success(false)
+                            .reason("The event sent does not exist")
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        List<Sponsor> sponsors = event.getSponsors();
+
+        return ResponseEntity.ok(
+                Response.builder()
+                        .success(true)
+                        .data(sponsors)
+                        .build()
+        );
+
+    }
 }

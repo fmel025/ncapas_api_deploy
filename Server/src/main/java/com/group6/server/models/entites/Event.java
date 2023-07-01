@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +37,9 @@ public class Event {
 
     @Column(name = "active")
     private Boolean active;
+
+    @Formula("(SELECT COALESCE(SUM(t.current_capacity), 0) FROM tier t WHERE t.event_id = code)")
+    private Integer availableSpaces;
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @JsonIgnore

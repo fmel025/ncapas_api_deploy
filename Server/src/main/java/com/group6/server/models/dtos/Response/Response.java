@@ -13,8 +13,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Response {
-    private String status;
-    private Integer statusCode;
     private String message;
     private Boolean success;
     private Object data;

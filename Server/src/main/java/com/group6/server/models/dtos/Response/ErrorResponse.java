@@ -13,8 +13,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
-    private String status;
-    private Integer statusCode;
     private String reason;
     private Map<String, List<String>> errors;
     private Boolean success;

@@ -4,6 +4,7 @@ import com.group6.server.models.dtos.Response.ErrorResponse;
 import com.group6.server.models.dtos.Response.Response;
 import com.group6.server.models.dtos.Tier.CreateTiersDTO;
 import com.group6.server.models.entites.Event;
+import com.group6.server.models.entites.Tier;
 import com.group6.server.services.EventService;
 import com.group6.server.services.TierService;
 import com.group6.server.utils.Constants;
@@ -15,9 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
-@RequestMapping(Constants.API_ADMIN_URL + "/tier")
+@RequestMapping(Constants.API_BASE_URL + "/tier")
 public class TierController {
 
     @Autowired
@@ -37,8 +40,6 @@ public class TierController {
         if (validations.hasErrors()) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.BAD_REQUEST.name())
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
                             .reason("Invalid body was sent")
                             .errors(errorHandler.mapErrors(validations.getFieldErrors()))
                             .success(false)
@@ -49,11 +50,9 @@ public class TierController {
 
         Event event = eventService.findEventById(dto.getEventCode());
 
-        if(event == null){
+        if (event == null) {
             return new ResponseEntity<>(
                     ErrorResponse.builder()
-                            .status(HttpStatus.NOT_FOUND.name())
-                            .statusCode(HttpStatus.NOT_FOUND.value())
                             .reason("The event sent was not found")
                             .success(false)
                             .build(),
@@ -65,8 +64,6 @@ public class TierController {
             tierService.saveAll(dto, event);
             return new ResponseEntity<>(
                     Response.builder()
-                            .status(HttpStatus.CREATED.name())
-                            .statusCode(HttpStatus.CREATED.value())
                             .message("Las tiers se han creado exitosamente")
                             .success(true)
                             .build(),
@@ -76,13 +73,44 @@ public class TierController {
             exception.printStackTrace();
             return ResponseEntity.internalServerError().body(
                     ErrorResponse.builder()
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .reason("Oops, the server is having issues, try later")
                             .success(false)
                             .build()
             );
         }
+    }
 
+    @GetMapping("/event/{code}")
+    public ResponseEntity<?> findAllTiersByEvent(
+            @PathVariable(name = "code") Integer code
+    ) {
+        Event event = eventService.findEventById(code);
+
+        if (event == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder().success(false)
+                            .reason("The event sent does not exist")
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        List<Tier> tiers = event.getTiers();
+
+        return ResponseEntity.ok(
+                Response.builder()
+                        .success(true)
+                        .data(tiers)
+                        .build()
+        );
+    }
+
+    @GetMapping("/{code}")
+    public ResponseEntity<?> getTierById(
+            @PathVariable(name = "code") String code
+    ) {
+        return ResponseEntity.ok(
+                tierService.findOneById(code)
+        );
     }
 }
