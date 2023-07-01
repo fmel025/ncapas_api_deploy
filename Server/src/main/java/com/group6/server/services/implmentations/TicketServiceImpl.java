@@ -6,11 +6,11 @@ import com.group6.server.models.entites.Ticket;
 import com.group6.server.models.entites.Tier;
 import com.group6.server.repositories.TicketsRepository;
 import com.group6.server.services.TicketService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -21,8 +21,16 @@ public class TicketServiceImpl implements TicketService{
 
 
     @Override
-    public void create(Ticket ticket, TicketDTO ticketDTO) {
+    @Transactional(rollbackOn = Exception.class)
+    public Ticket create(TicketDTO ticketDTO) {
+        Ticket newTicket = new Ticket(
+              ticketDTO.getTier(),
+                ticketDTO.getPurchase()
+        );
 
+       ticketRepository.save(newTicket);
+
+       return newTicket;
     }
 
     @Override

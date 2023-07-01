@@ -2,6 +2,7 @@ package com.group6.server.models.dtos;
 
 
 
+import com.group6.server.models.entites.Purchase;
 import com.group6.server.models.entites.Tier;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -15,4 +16,5 @@ import java.util.UUID;
 public class TicketDTO {
 
   private Tier tier;
+  private Purchase purchase;
 }

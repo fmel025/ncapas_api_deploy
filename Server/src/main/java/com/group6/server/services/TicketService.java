@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface TicketService {
-   void create(Ticket ticket, TicketDTO ticketDTO);
+   Ticket create(TicketDTO ticketDTO);
 
    Ticket getById(String id);
 
