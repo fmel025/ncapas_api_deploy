@@ -7,6 +7,9 @@ import com.group6.server.repositories.TicketsRepository;
 import com.group6.server.services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -41,7 +44,9 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public Page<Ticket> findAllActive(int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        return ticketRepository.findAllByActive(true, pageable);
+
     }
 
     @Override
