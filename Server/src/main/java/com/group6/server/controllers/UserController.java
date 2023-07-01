@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,17 @@ public class UserController {
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getAllPermissions(){
+        return ResponseEntity.ok(
+                authService.findUserAuthenticated()
+                        .getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList()
+        );
     }
 
     // This route may be needed in the future
