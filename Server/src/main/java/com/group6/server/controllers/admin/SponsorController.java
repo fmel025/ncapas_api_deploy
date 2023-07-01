@@ -146,4 +146,42 @@ public class SponsorController {
             );
         }
     }
+
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteSponsorById(
+            @PathVariable(name = "code") Integer code
+    ) {
+        Sponsor sponsor = sponsorService.findByCode(code);
+
+        if (sponsor == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .success(false)
+                            .reason("The sponsor sent was not found")
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        try {
+            sponsorService.deleteById(code);
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .success(true)
+                            .message("The sponsor was deleted successfully")
+                            .build()
+            );
+
+        } catch (Exception exception) {
+
+            exception.printStackTrace();
+
+            return ResponseEntity.internalServerError().body(
+                    ErrorResponse.builder()
+                            .success(false)
+                            .reason("Internal server error")
+                            .build()
+            );
+        }
+    }
 }

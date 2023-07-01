@@ -38,4 +38,10 @@ public class SponsorServiceImpl implements SponsorService {
         return sponsorRepository.findById(code)
                 .orElse(null);
     }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void deleteById(Integer code) throws Exception {
+        sponsorRepository.deleteById(code);
+    }
 }

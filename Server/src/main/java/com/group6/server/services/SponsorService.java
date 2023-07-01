@@ -11,4 +11,6 @@ public interface SponsorService {
     void saveAll(List<String> sponsors, Event event) throws Exception;
 
     Sponsor findByCode(Integer code);
+
+    void deleteById(Integer code) throws Exception;
 }
