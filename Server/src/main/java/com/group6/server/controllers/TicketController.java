@@ -27,12 +27,12 @@ public class TicketController {
     }
 
     //Tickets validos
-    @GetMapping("/valid/")
+    @GetMapping("/valid/{isValid}")
     public  ResponseEntity<?> getValidTickets(
             @Valid
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
-            @RequestBody TicketDTO ticketDTO ,
+            @PathVariable(name = "isValid") boolean isValid,
             BindingResult validations
 
     ){
@@ -45,16 +45,10 @@ public class TicketController {
             );
         }
 
-        if (ticketDTO.getIsValid()!=true){
-            return ResponseEntity.badRequest().body(
-                    new ErrorsDTO(
-                            errorHandler.mapErrors(validations.getFieldErrors())
-                    )
-            );
-        }
-
-        return ResponseEntity.ok(ticketService.findAllValid(page, size, ticketDTO.getIsValid()));
-
-
+    if(isValid){
+        return ResponseEntity.ok(ticketService.findAllValid(page, size, isValid));
+    }else{
+        return ResponseEntity.ok(ticketService.findAllInvalid(page, size, isValid));
+    }
     }
 }
