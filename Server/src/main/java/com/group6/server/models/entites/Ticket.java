@@ -23,26 +23,17 @@ public class Ticket {
     @Column(name = "validated")
     private Boolean validated;
 
-    @Column(name = "purchase_date")
-    private LocalDateTime purchaseDate;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "event_code")
-    private Event event;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tier_code")
     private Tier tier;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_code")
-    private User user;
+    @JoinColumn(name = "purchase_code")
+    private Purchase purchase;
 
-    public Ticket(Boolean validated, Event event, Tier tier, User user) {
-        this.validated = validated;
-        this.event = event;
+    public Ticket(Tier tier, Purchase purchase) {
+        this.validated = false;
         this.tier = tier;
-        this.user = user;
-        this.purchaseDate = LocalDateTime.now();
+        this.purchase = purchase;
     }
 }
