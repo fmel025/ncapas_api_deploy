@@ -61,20 +61,20 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Event> findAllActive(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("title"));
-        return repository.findAllByActive(true, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAllByActiveOrderByDateTimeDesc(true, pageable);
     }
 
     @Override
     public Page<Event> findAllByTitle(int page, int size, String title) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("title"));
-        return repository.findAllByTitleContainingIgnoreCase(title, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAllByTitleContainingIgnoreCaseOrderByDateTimeDesc(title, pageable);
     }
 
     @Override
     public Page<Event> findAllByTitleAndActive(int page, int size, String title) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("title"));
-        return repository.findAllByActiveAndTitleContainingIgnoreCase(true, title, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAllByActiveAndTitleContainingIgnoreCaseOrderByDateTimeDesc(true, title, pageable);
     }
 
     @Override

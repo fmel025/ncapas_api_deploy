@@ -133,8 +133,42 @@ public class EventPrivateController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/toggle-visibility/{id}")
-    public ResponseEntity<?> toggleEventVisibility(@PathVariable(name = "id") String event) {
-        return ResponseEntity.ok().build();
+    @PatchMapping("/toggle-visibility/{code}")
+    public ResponseEntity<?> toggleEventVisibility(@PathVariable(name = "code") Integer code) {
+
+        Event event = eventService.findEventById(code);
+
+        if (event == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("The event sent was not found")
+                            .success(false)
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        try {
+            // toggle if is visible with active
+            event.setActive(!event.getActive());
+            eventService.updateEvent(event);
+
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .message("The active visibility has been changed")
+                            .success(true)
+                            .build()
+            );
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Internal server error")
+                            .success(false)
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
