@@ -18,6 +18,7 @@ import java.util.Map;
 
 // This is the public controller, the one for the admin and event mod will be another one
 @RestController
+@CrossOrigin("*")
 @RequestMapping(Constants.API_PUBLIC_URL + "/event")
 public class EventController {
 
