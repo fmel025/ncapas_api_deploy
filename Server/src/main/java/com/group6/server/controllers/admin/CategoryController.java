@@ -1,6 +1,7 @@
 package com.group6.server.controllers.admin;
 
 import com.group6.server.models.dtos.Category.CategoriesCreateDTO;
+import com.group6.server.models.dtos.Category.CategoryUpdateDTO;
 import com.group6.server.models.dtos.Response.ErrorResponse;
 import com.group6.server.models.dtos.Response.Response;
 import com.group6.server.models.entites.Category;
@@ -72,12 +73,12 @@ public class CategoryController {
 
     @GetMapping("/event/{code}")
     ResponseEntity<?> findCategoriesByEvent(
-            @PathVariable(name = "code" ) Integer code
+            @PathVariable(name = "code") Integer code
     ) {
 
         Event event = eventService.findEventById(code);
 
-        if(event == null){
+        if (event == null) {
             return new ResponseEntity<>(
                     ErrorResponse.builder().success(false)
                             .reason("The event sent does not exist")
@@ -94,5 +95,98 @@ public class CategoryController {
                         .data(categories)
                         .build()
         );
+    }
+
+    @PatchMapping("/{code}")
+    public ResponseEntity<?> updateCategory(
+            @Valid @RequestBody CategoryUpdateDTO dto,
+            @PathVariable(name = "code") Integer code,
+            BindingResult validations
+    ) {
+        if (validations.hasErrors()) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Invalid body was sent")
+                            .errors(errorHandler.mapErrors(validations.getFieldErrors()))
+                            .success(false)
+                            .build(),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        Category category = categoryService.findOneById(code);
+
+        if (category == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("The category sent was not found")
+                            .success(false)
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        try {
+
+            category.setName(dto.getName());
+            categoryService.save(category);
+
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .success(true)
+                            .message("The category has been updated sucessfully")
+                            .build()
+            );
+        } catch (Exception exception) {
+            exception.printStackTrace();
+
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .success(false)
+                            .reason("Internal server error")
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteCategoryById(
+            @PathVariable(name = "code") Integer code
+    ) {
+        Category category = categoryService.findOneById(code);
+
+        if (category == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("The category sent was not found")
+                            .success(false)
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        try {
+            categoryService.deleteById(code);
+
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .message("The category was removed")
+                            .success(true)
+                            .build()
+            );
+
+        } catch (Exception exception) {
+
+            exception.printStackTrace();
+
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Internal server error")
+                            .success(false)
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }

@@ -48,4 +48,10 @@ public class CategoryServiceImpl implements CategoryService {
     public Category findOneById(Integer id) {
         return categoryRepository.findById(id).orElse(null);
     }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void deleteById(Integer code) throws Exception {
+        categoryRepository.deleteById(code);
+    }
 }

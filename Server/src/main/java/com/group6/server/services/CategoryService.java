@@ -15,4 +15,6 @@ public interface CategoryService {
     List<Category> findAllByEvent(Event event);
 
     Category findOneById(Integer id);
+
+    void deleteById(Integer code) throws Exception;
 }
