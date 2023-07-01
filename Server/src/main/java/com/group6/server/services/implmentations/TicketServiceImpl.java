@@ -51,6 +51,7 @@ public class TicketServiceImpl implements TicketService{
 
     @Override
     public Page<Ticket> findAllValid(int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        return ticketRepository.findAllByValidated(true, pageable);
     }
 }
