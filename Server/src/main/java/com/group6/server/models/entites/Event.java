@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@ToString(exclude = {"sponsors","organizers","categories","tiers","tickets"})
+@ToString(exclude = {"sponsors","organizers","categories","tiers","purchases"})
 @Table(name = "event", schema = "public")
 public class Event {
 
@@ -61,7 +61,7 @@ public class Event {
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Ticket> tickets;
+    private List<Purchase> purchases;
 
     public Event(String title, String duration, String location, LocalDateTime dateTime, String imageUrl) {
         this.title = title;
