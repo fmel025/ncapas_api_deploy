@@ -1,5 +1,6 @@
 package com.group6.server.services;
 
+import com.group6.server.models.dtos.PurchaseDTO;
 import com.group6.server.models.entites.Event;
 import com.group6.server.models.entites.Purchase;
 import com.group6.server.models.entites.User;
@@ -9,7 +10,7 @@ import java.util.List;
 
 // Base purchase services
 public interface PurchaseService {
-    Purchase save(Purchase purchase);
+    Purchase save(User user, PurchaseDTO purchaseDTO);
 
     List<Purchase> findByUser(User user);
 

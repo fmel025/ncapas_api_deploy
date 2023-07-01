@@ -1,5 +1,6 @@
 package com.group6.server.models.dtos;
 
+import com.group6.server.models.entites.Event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PurchaseDTO {
 
-    private UUID id;
+    private Event event;
 }
