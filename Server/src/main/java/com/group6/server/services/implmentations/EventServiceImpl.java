@@ -43,8 +43,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event updateEvent(UpdateEventDTO eventDTO) {
-        return null;
+    @Transactional(rollbackOn = Exception.class)
+    public Event updateEvent(Event event) throws Exception {
+        return repository.save(event);
     }
 
     @Override

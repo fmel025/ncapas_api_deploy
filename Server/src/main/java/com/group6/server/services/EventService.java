@@ -13,7 +13,7 @@ public interface EventService {
     Event createEvent(EventDTO eventDTO) throws Exception;
 
     //update event
-    Event updateEvent(UpdateEventDTO eventDTO); // should be the same method as createEvent
+    Event updateEvent(Event event) throws Exception; // should be the same method as createEvent
 
     //find all events
     List<Event> findAllEvents();
