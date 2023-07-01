@@ -3,6 +3,7 @@ package com.group6.server.controllers.admin;
 import com.group6.server.models.dtos.Response.ErrorResponse;
 import com.group6.server.models.dtos.Response.Response;
 import com.group6.server.models.dtos.Tier.CreateTiersDTO;
+import com.group6.server.models.dtos.Tier.UpdateTierDTO;
 import com.group6.server.models.entites.Event;
 import com.group6.server.models.entites.Tier;
 import com.group6.server.services.EventService;
@@ -112,5 +113,57 @@ public class TierController {
         return ResponseEntity.ok(
                 tierService.findOneById(code)
         );
+    }
+
+    @PatchMapping("/{code}")
+    public ResponseEntity<?> updateTierName(
+            @Valid @RequestBody UpdateTierDTO dto,
+            @PathVariable(name = "code") String code,
+            BindingResult validations
+    ) {
+        if (validations.hasErrors()) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Invalid body was sent")
+                            .errors(errorHandler.mapErrors(validations.getFieldErrors()))
+                            .success(false)
+                            .build(),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        Tier tier = tierService.findOneById(code);
+
+        if (tier == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("The tier sent was not found")
+                            .success(false)
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        try {
+            tier.setName(dto.getName());
+            tier.setPrice(dto.getPrice());
+            tierService.save(tier);
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .success(true)
+                            .message("The tier was updated successfully")
+                            .build()
+            );
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Internal server error")
+                            .success(false)
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
