@@ -35,7 +35,7 @@ public class EventController {
             @RequestParam(name = "size", defaultValue = "20") int size,
             @RequestParam(name = "title", required = false, defaultValue = "") String title) {
         if (title.isEmpty()) {
-            Page<Event> events = eventService.findAll(page, size);
+            Page<Event> events = eventService.findAllActive(page, size);
             PageDTO<Event> response = new PageDTO<>(
                     events.getContent(),
                     events.getTotalPages(),
@@ -45,7 +45,7 @@ public class EventController {
             return ResponseEntity.ok(response);
         }
 
-        Page<Event> events = eventService.findAllByTitle(page, size, title);
+        Page<Event> events = eventService.findAllByTitleAndActive(page, size, title);
         PageDTO<Event> response = new PageDTO<>(
                 events.getContent(),
                 events.getTotalPages(),
