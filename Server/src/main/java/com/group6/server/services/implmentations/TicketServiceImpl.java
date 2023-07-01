@@ -54,15 +54,16 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public Page<Ticket> findAllActive(int page, int size) {
+    public Page<Ticket> findAllValid(int page, int size, boolean isValid) {
         Pageable pageable = PageRequest.of(page, size);
-        return ticketRepository.findAllByActive(true, pageable);
-
+        return ticketRepository.findAllTicketByValidated(isValid, pageable);
     }
 
     @Override
-    public Page<Ticket> findAllValid(int page, int size) {
+    public Page<Ticket> findAllInvalid(int page, int size, boolean isValid) {
         Pageable pageable = PageRequest.of(page, size);
-        return ticketRepository.findAllByValidated(true, pageable);
+        return ticketRepository.findAllTicketByInValidated(isValid, pageable);
     }
+
+
 }

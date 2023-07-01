@@ -20,7 +20,7 @@ public interface TicketService {
 
    void updateTicketValidity(Ticket ticket);
 
-   Page<Ticket> findAllValid(int page, int size);
+   Page<Ticket> findAllValid(int page, int size, boolean isValid);
 
-    Page<Ticket> findAllInvalid(int page, int size);
+    Page<Ticket> findAllInvalid(int page, int size, boolean isValid);
 }
