@@ -18,8 +18,9 @@ public class SponsorServiceImpl implements SponsorService {
     private SponsorRepository sponsorRepository;
 
     @Override
-    public void save(Sponsor sponsor, Event event) {
-
+    @Transactional(rollbackOn = Exception.class)
+    public void save(Sponsor sponsor) throws Exception {
+        sponsorRepository.save(sponsor);
     }
 
     @Override
@@ -30,5 +31,11 @@ public class SponsorServiceImpl implements SponsorService {
                 .collect(Collectors.toList());
 
         sponsorRepository.saveAll(sponsorList);
+    }
+
+    @Override
+    public Sponsor findByCode(Integer code) {
+        return sponsorRepository.findById(code)
+                .orElse(null);
     }
 }

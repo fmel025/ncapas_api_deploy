@@ -146,7 +146,6 @@ public class TierController {
 
         try {
             tier.setName(dto.getName());
-            tier.setPrice(dto.getPrice());
             tierService.save(tier);
             return ResponseEntity.ok(
                     Response.builder()

@@ -14,7 +14,4 @@ import java.math.BigDecimal;
 public class UpdateTierDTO {
     @NotEmpty(message = "The new tier name must be sent")
     private String name;
-
-    @NotNull(message = "The new price must be sent")
-    private BigDecimal price;
 }

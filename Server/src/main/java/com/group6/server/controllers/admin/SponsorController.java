@@ -2,6 +2,7 @@ package com.group6.server.controllers.admin;
 
 import com.group6.server.models.dtos.Response.ErrorResponse;
 import com.group6.server.models.dtos.Response.Response;
+import com.group6.server.models.dtos.Sponsor.SponsorUpdateDTO;
 import com.group6.server.models.dtos.Sponsor.SponsorsCreateDTO;
 import com.group6.server.models.entites.Event;
 import com.group6.server.models.entites.Sponsor;
@@ -94,6 +95,55 @@ public class SponsorController {
                         .data(sponsors)
                         .build()
         );
+    }
 
+    @PatchMapping("/{code}")
+    public ResponseEntity<?> updateSponsor(
+            @Valid @RequestBody SponsorUpdateDTO dto,
+            @PathVariable(name = "code") Integer code,
+            BindingResult validations
+    ) {
+        if (validations.hasErrors()) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Invalid body was sent")
+                            .errors(errorHandler.mapErrors(validations.getFieldErrors()))
+                            .success(false)
+                            .build(),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        Sponsor sponsor = sponsorService.findByCode(code);
+
+        if (sponsor == null) {
+            return new ResponseEntity<>(
+                    ErrorResponse.builder().success(false)
+                            .reason("The sponsor sent does not exist")
+                            .build(),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        try {
+            sponsor.setName(dto.getName());
+            sponsorService.save(sponsor);
+
+            return ResponseEntity.ok(
+                    Response.builder()
+                            .message("The sponsor was updated successfully")
+                            .success(true)
+                            .build()
+            );
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity<>(
+                    ErrorResponse.builder()
+                            .reason("Internal server error")
+                            .success(false)
+                            .build(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
