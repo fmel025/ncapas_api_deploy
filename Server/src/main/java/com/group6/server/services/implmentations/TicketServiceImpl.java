@@ -1,6 +1,6 @@
 package com.group6.server.services.implmentations;
 
-import com.group6.server.models.dtos.TicketDTO;
+import com.group6.server.models.dtos.Tickets.TicketDTO;
 import com.group6.server.models.entites.Purchase;
 import com.group6.server.models.entites.Ticket;
 import com.group6.server.models.entites.Tier;

@@ -1,4 +1,4 @@
-package com.group6.server.models.dtos;
+package com.group6.server.models.dtos.Tickets;
 
 
 
@@ -17,4 +17,6 @@ public class TicketDTO {
 
   private Tier tier;
   private Purchase purchase;
+
+
 }
