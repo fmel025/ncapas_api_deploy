@@ -3,6 +3,7 @@ package com.group6.server.services;
 import com.group6.server.models.entites.Purchase;
 import com.group6.server.models.entites.Ticket;
 import com.group6.server.models.entites.Tier;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -17,4 +18,8 @@ public interface TicketService {
    List<Ticket> getAllByPurchase(Purchase purchase);
 
    void updateTicketValidity(Ticket ticket);
+
+   Page<Ticket> findAllActive(int page, int size);
+
+    Page<Ticket> findAllValid(int page, int size);
 }
