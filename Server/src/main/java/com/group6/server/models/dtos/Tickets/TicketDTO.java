@@ -17,6 +17,6 @@ public class TicketDTO {
 
   private Tier tier;
   private Purchase purchase;
-
+  private Integer quantity;
 
 }
