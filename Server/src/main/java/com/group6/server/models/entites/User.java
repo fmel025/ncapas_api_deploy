@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@ToString(exclude = {"authorizations","tickets"})
+@ToString(exclude = {"authorizations","purchases"})
 @Entity
 @Table(name = "user", schema = "public")
 public class User implements UserDetails {
@@ -56,7 +56,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Ticket> tickets;
+    private List<Purchase> purchases;
 
     public User(String fullName, String email) {
         this.fullName = fullName;

@@ -1,8 +1,11 @@
 package com.group6.server.controllers;
 
-import com.group6.server.models.dtos.CreatePurchaseDTO;
-import com.group6.server.models.dtos.ErrorDTO;
-import com.group6.server.models.dtos.ErrorsDTO;
+import com.group6.server.models.dtos.*;
+import com.group6.server.models.entites.Purchase;
+import com.group6.server.models.entites.User;
+import com.group6.server.services.AuthService;
+import com.group6.server.services.PurchaseService;
+import com.group6.server.services.TicketService;
 import com.group6.server.utils.Constants;
 import com.group6.server.utils.ErrorHandler;
 import jakarta.validation.Valid;
@@ -19,8 +22,17 @@ public class PurchaseController {
     @Autowired
     ErrorHandler errorHandler;
 
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private PurchaseService purchaseService;
+
+    @Autowired
+    private TicketService ticketService;
+
     @PostMapping("/")
-    public ResponseEntity<?> createPurchase(@Valid @RequestBody CreatePurchaseDTO dto, BindingResult validations){
+    public ResponseEntity<?> createPurchase(@Valid @RequestBody PurchaseDTO dto,Integer quantity , BindingResult validations){
         if(validations.hasErrors()){
             return ResponseEntity.badRequest()
                     .body(
@@ -29,6 +41,28 @@ public class PurchaseController {
                     )
             );
         }
+        //verifico que el id del evento exista
+
+        if(dto.getEvent().getCode() == null){
+            return ResponseEntity.badRequest().body(
+                    new ErrorDTO("The event is required for this request", false)
+
+            );
+        }
+
+        //verifico que el usuario exista
+        User user = authService.findUserAuthenticated();
+        if(user == null){
+            return ResponseEntity.badRequest().body(
+                    new ErrorDTO("The user authenticated is  required ", false)
+            );
+        }
+
+        //crear la compra que contiene al usuario y al evento
+        Purchase purchase = purchaseService.save(user,dto);
+
+
+
 
         return ResponseEntity.ok().build();
     }
