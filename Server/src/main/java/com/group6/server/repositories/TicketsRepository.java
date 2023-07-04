@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TicketsRepository  extends JpaRepository<Ticket, Integer> {
 
     //Encontrar todos los tickets que estén activos
-    Page<Ticket> findAllTicketByValidated(Boolean valid, Pageable pageable);
-
-    //Encontrar todos los tickets que estén validados
-    Page<Ticket> findAllTicketByInValidated(Boolean valid, Pageable pageable);
+    Page<Ticket> findAllTicketByValidated(Boolean validated, Pageable pageable);
 
 }

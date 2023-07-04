@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
+public interface PurchaseRepository extends JpaRepository<Purchase, UUID> {
 
     //Encontrar todas las compras de un usuario
     Page<Purchase> findAllByUser(User user, Pageable pageable);
 
-
-    List<Purchase> findAllById(String id);
+    List<Purchase> findAllByCode(UUID id);
 }
