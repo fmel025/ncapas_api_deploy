@@ -14,9 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketDTO {
-
   private Tier tier;
   private Purchase purchase;
   private Integer quantity;
-
 }

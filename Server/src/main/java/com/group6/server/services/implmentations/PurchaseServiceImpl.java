@@ -11,21 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
+@Service
 public class PurchaseServiceImpl implements PurchaseService {
+
+
     @Autowired
     private PurchaseRepository repository;
+
     @Override
-    @Transactional(rollbackOn = Exception.class)
-    public Purchase save(User user, PurchaseDTO purchaseDTO) {
-        Purchase newPurchase = new Purchase(
-                user,
-                purchaseDTO.getEvent()
-        );
-        repository.save(newPurchase);
-        return newPurchase;
+    public void save(Purchase purchase) throws Exception {
+        repository.save(purchase);
     }
 
     @Override
@@ -51,6 +51,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public List<Purchase> findAllById(String id) {
-        return  repository.findAllById(id);
+        UUID code = UUID.fromString(id);
+        return  repository.findAllByCode(code);
     }
 }

@@ -11,26 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TicketServiceImpl implements TicketService{
 
     @Autowired
     private TicketsRepository ticketRepository;
 
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public Ticket create(Ticket ticket) throws Exception {
+        return ticketRepository.save(ticket);
+    }
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public Ticket create(TicketDTO ticketDTO) {
-        Ticket newTicket = new Ticket(
-              ticketDTO.getTier(),
-                ticketDTO.getPurchase()
-        );
-
-       ticketRepository.save(newTicket);
-
-       return newTicket;
+    public void saveAll(List<Ticket> tickets) throws Exception {
+        ticketRepository.saveAll(tickets);
     }
 
     @Override
@@ -54,15 +54,15 @@ public class TicketServiceImpl implements TicketService{
     }
 
     @Override
-    public Page<Ticket> findAllValid(int page, int size, boolean isValid) {
+    public Page<Ticket> findAllValid(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ticketRepository.findAllTicketByValidated(isValid, pageable);
+        return ticketRepository.findAllTicketByValidated(true, pageable);
     }
 
     @Override
-    public Page<Ticket> findAllInvalid(int page, int size, boolean isValid) {
+    public Page<Ticket> findAllInvalid(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ticketRepository.findAllTicketByInValidated(isValid, pageable);
+        return ticketRepository.findAllTicketByValidated(false, pageable);
     }
 
 

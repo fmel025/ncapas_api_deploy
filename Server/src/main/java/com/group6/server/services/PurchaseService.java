@@ -10,7 +10,7 @@ import java.util.List;
 
 // Base purchase services
 public interface PurchaseService {
-    Purchase save(User user, PurchaseDTO purchaseDTO);
+    void save(Purchase purchase) throws Exception;
 
     List<Purchase> findByUser(User user);
 

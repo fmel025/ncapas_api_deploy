@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface TicketService {
-   Ticket create(TicketDTO ticketDTO);
+   Ticket create(Ticket ticket) throws Exception;
+
+   void saveAll(List<Ticket> tickets) throws Exception;
 
    Ticket getById(String id);
 
@@ -20,7 +22,7 @@ public interface TicketService {
 
    void updateTicketValidity(Ticket ticket);
 
-   Page<Ticket> findAllValid(int page, int size, boolean isValid);
+   Page<Ticket> findAllValid(int page, int size);
 
-    Page<Ticket> findAllInvalid(int page, int size, boolean isValid);
+    Page<Ticket> findAllInvalid(int page, int size);
 }
