@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.group6.server.utils.Constants;
 
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -111,6 +110,7 @@ public class AuthController {
                     );
                 }
                 user = authService.register(data, authorization);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return new ResponseEntity<>(
